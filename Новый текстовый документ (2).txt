@@ -1,0 +1,5 @@
+string[] linesFirst = File.ReadAllLines("C:\\text1.txt");
+            string[] linesSecond = File.ReadAllLines("C:\\text2.txt");
+            var intersection = linesFirst.Intersect<string>(linesSecond);
+            File.WriteAllLines("C:\\something\\text3.txt", intersection);
+            DirectoryInfo dir = new DirectoryInfo("C:\\something\\");

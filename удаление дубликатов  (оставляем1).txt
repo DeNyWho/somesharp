@@ -1,0 +1,3 @@
+var lines = File.ReadAllLines("C:\\something\\result.txt");
+            var disctinctLines = lines.Distinct();
+            File.WriteAllLines("C:\\something\\result.txt", disctinctLines);

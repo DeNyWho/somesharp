@@ -1,0 +1,49 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.IO;
+using System.Linq;
+namespace ConsoleApp4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // смотрим все названия файлов и записываем их в отдельный массив
+            var files = Directory.GetFiles(@"c:\something\").Select(fn => Path.GetFileName(fn)).ToArray();
+            File.WriteAllLines("result", files);
+            Console.WriteLine(files.Length);
+            for (int i = 0; i < files.Length; i++)
+                follower_list("c:\\something\\" + files[i]);
+        }
+        static void follower_list(string jsonPath)
+        {
+            using StreamReader reader = File.OpenText(jsonPath);
+            var jToken = JToken.ReadFrom(new JsonTextReader(reader));
+            // Вытаскиваем json данные в строковый массив
+            var values =
+                jToken["relationships_followers"].Select(j =>
+                        j["string_list_data"][0]["value"].ToObject<string>())
+                .ToArray();
+            // вывод в файл
+            for (int i = 0; i < values.Length; i++)
+                output_to_file(values[i]);
+        }
+        static void output_to_file(string value)
+        {
+            // имя файла
+            string filePath = @"C:\something\result.txt";
+            // текст запишем в файл
+            string text = "Hello!";
+            FileStream fileStream = null;
+            // проверяем существует ли файл файл
+            if (!File.Exists(filePath))
+                fileStream = File.Create(filePath); // создаем файл
+            else
+                fileStream = File.Open(filePath, FileMode.Append); // открываем файл и в конец будут добавлены данные
+            StreamWriter output = new StreamWriter(fileStream);
+            output.Write($"{value}\n");
+            output.Close();
+        }
+    }
+}

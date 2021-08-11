@@ -1,0 +1,25 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.IO;
+using System.Linq;
+
+namespace ConsoleApp3
+{
+    class Program
+    {
+        [Obsolete]
+        static void Main(string[] args)
+        {
+            var jsonPath = "followers.json";
+            using StreamReader reader = File.OpenText(jsonPath);
+            var jToken = JToken.ReadFrom(new JsonTextReader(reader));
+
+            var values =
+                jToken["relationships_followers"].Select(j =>
+                        j["string_list_data"][0]["value"].ToObject<string>())
+                .ToArray();
+            File.WriteAllLines("123", values);
+        }
+    }
+}
